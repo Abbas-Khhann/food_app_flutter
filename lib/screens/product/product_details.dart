@@ -6,6 +6,7 @@ class ProductDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
           child: Column(
             children: [
@@ -149,11 +150,14 @@ class ProductDetails extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
-                              Container(
-                                height: 50,
-                                width: 50,
-                                color: Colors.red,
-                              )
+                             _toppingsCard("Tomato", "assets/images/tomato.png"),
+                              SizedBox(width: 20),
+                              _toppingsCard("Onions", "assets/images/onions.png"),
+                              SizedBox(width: 20),
+                              _toppingsCard("Pickles", "assets/images/pickles.png"),
+                              SizedBox(width: 20),
+                              _toppingsCard("Salad", "assets/images/salad.png"),
+
                             ],
                           ),
                         ))
@@ -168,4 +172,61 @@ class ProductDetails extends StatelessWidget {
       ),
     );
   }
+
+  Widget _toppingsCard(String text, String image){
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 48, vertical: 58),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: Colors.brown[800],
+          ),
+
+        ),
+        Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 15,
+                      offset: Offset(4, 4)
+                  )
+                ]
+            ),
+            child: Image.asset(
+              width: 70,
+                image,
+              fit: BoxFit.contain
+            )
+        ),
+        Positioned(
+            top: 82,
+            left: 5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(100)
+                  ),
+                  child: Icon(Icons.add_circle, color: Colors.red, size: 20,),
+                )
+              ],
+            )
+        )
+      ],
+    );
+  }
 }
+
+
