@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/splash/splash_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/product/product_screen.dart';
+import 'screens/product/product_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,11 +16,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Food App',
-      initialRoute: '/',
+      initialRoute: '/details',
       routes: {
         '/': (context) => const SplashScreen(),
         '/home': (context) => const HomeScreen(),
         '/product': (context) => const ProductScreen(),
+        '/details': (context) => const ProductDetails(),
       },
     );
   }
