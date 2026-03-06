@@ -67,7 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
 
-            /// MAIN CONTENT
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -77,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 10),
 
-                    /// CART ICON
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -129,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 10),
 
-                    /// HEADER
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -176,7 +173,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 20),
 
-                    /// SEARCH BAR
                     Row(
                       children: [
 
@@ -223,7 +219,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 20),
 
-                    /// CATEGORY CHIPS
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -238,7 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 20),
 
-                    /// FOOD GRID
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -266,7 +260,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            /// BOTTOM NAVBAR
             Container(
               decoration: const BoxDecoration(
                 color: Color(0xFFE8394B),
@@ -328,7 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// CHIP
   Widget _chip(String label, bool selected) {
     return Container(
       margin: const EdgeInsets.only(right: 10),
@@ -348,7 +340,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  /// FOOD CARD
   Widget _foodCard(Map item, int index) {
     return Container(
       decoration: BoxDecoration(
@@ -412,7 +403,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   MainAxisAlignment.center,
                   children: [
 
-                    /// MINUS
                     Container(
                       height: 30,
                       width: 30,
@@ -439,7 +429,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(width: 10),
 
-                    /// PLUS
                     Container(
                       height: 30,
                       width: 30,
