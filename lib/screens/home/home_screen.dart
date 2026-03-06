@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +21,57 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Stack(
+                            children:[
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.red[600],
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                            ),
+                              Positioned(
+                                  top: 14,
+                                  left: 15,
+                                  child: Icon(Icons.shopping_cart, size: 30, color: Colors.white,)),
+                              Positioned(
+                                top: 32,
+                                left: 8,
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        color: Colors.black38
+                                      ),
+                                      borderRadius: BorderRadius.circular(50)
+                                  ),
+                                  
+                                  // the text will become dynamic for counter
+                                  child: Center(
+                                    child: Text(
+                                      "1",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                           ]
+                          )
+
+                        ],
+                      ),
+
+                    SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -57,7 +112,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 15),
                     Row(
                       children: [
                         Expanded(
@@ -232,17 +287,19 @@ class HomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: Image.asset(
-                  image,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.contain,
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Image.asset(
+                    image,
+                    width: 70,
+                    height: 70,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
@@ -290,6 +347,60 @@ class HomeScreen extends StatelessWidget {
                     Icon(Icons.favorite_border, color: Colors.grey[400], size: 20),
                   ],
                 ),
+                 SizedBox(height: 4),
+                Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8)
+                        ),
+                        child: IconButton(
+                          // on pressed increment or decrement
+                          onPressed: () {},
+                          icon: const Icon(
+                              Icons.remove,
+                              color: Colors.white,
+                              size: 16),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ),
+                          SizedBox(width: 8,),
+                          // this number will be dynamic
+                      Text(
+                          "0",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
+                        ),
+                      ),
+                      SizedBox(width: 8,),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8)
+                        ),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 16),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -298,3 +409,9 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
+// Take a cart icon on top right of home screen show total no. of products
+// add plus/minus counter to each product
+// show the number of items added to the cart as well as show count on product as well
+//
