@@ -1,92 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import '../../controllers/food_controller.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-  int cartCount = 0;
-
-  List<Map<String, dynamic>> foods = [
-    {
-      "name": "Cheeseburger",
-      "restaurant": "Wendy's Burger",
-      "rating": 4.9,
-      "image": "assets/images/cheeseburger.png",
-      "count": 0
-    },
-    {
-      "name": "Hamburger",
-      "restaurant": "Veggie Burger",
-      "rating": 4.8,
-      "image": "assets/images/hamburger1.png",
-      "count": 0
-    },
-    {
-      "name": "Hamburger",
-      "restaurant": "Chicken Burger",
-      "rating": 4.6,
-      "image": "assets/images/hamburger2.png",
-      "count": 0
-    },
-    {
-      "name": "Hamburger",
-      "restaurant": "Fried Chicken Burger",
-      "rating": 4.5,
-      "image": "assets/images/hamburger3.png",
-      "count": 0
-    }
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    loadCounts();
-  }
-
-  void loadCounts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int total = 0;
-    setState(() {
-      for (int i = 0; i < foods.length; i++) {
-        int saved = prefs.getInt('count_$i') ?? 0;
-        foods[i]["count"] = saved;
-        total += saved;
-      }
-      cartCount = total;
-    });
-  }
-
-  void saveCount(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('count_$index', foods[index]["count"]);
-  }
-
-  void increment(int index) {
-    setState(() {
-      foods[index]["count"]++;
-      cartCount++;
-    });
-    saveCount(index);
-  }
-
-  void decrement(int index) {
-    if (foods[index]["count"] > 0) {
-      setState(() {
-        foods[index]["count"]--;
-        cartCount--;
-      });
-      saveCount(index);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+
+    final FoodController controller = Get.find<FoodController>();
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
@@ -127,15 +50,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(50),
                                 ),
-                                child: Center(
+                                child: Obx(() => Center(
                                   child: Text(
-                                    cartCount.toString(),
+                                    controller.cartCount.value.toString(),
                                     style: const TextStyle(
                                       color: Colors.red,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                ),
+                                )),
                               ),
                             ),
                           ],
@@ -228,10 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    GridView.builder(
+                    Obx(() => GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: foods.length,
+                      itemCount: controller.foods.length,
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 14,
@@ -239,10 +162,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         childAspectRatio: 0.78,
                       ),
                       itemBuilder: (context, index) {
-                        final item = foods[index];
-                        return _foodCard(item, index);
+                        final item = controller.foods[index];
+                        return _foodCard(context, controller, item, index);
                       },
-                    ),
+                    )),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -308,83 +231,89 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _foodCard(Map item, int index) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-            child: Padding(
+  Widget _foodCard(BuildContext context, FoodController controller, Map item, int index) {
+    return GestureDetector(
+      onTap: () {
+        controller.selectFood(item);
+        Get.toNamed('/details');
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.asset(item["image"], fit: BoxFit.contain),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.all(10),
-              child: Image.asset(item["image"], fit: BoxFit.contain),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item["name"], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text(item["restaurant"], style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.amber, size: 16),
+                          const SizedBox(width: 4),
+                          Text(item["rating"].toString()),
+                        ],
+                      ),
+                      Icon(Icons.favorite_border, color: Colors.grey[400]),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.remove, color: Colors.white, size: 16),
+                          padding: EdgeInsets.zero,
+                          onPressed: () => controller.decrement(index),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        item["count"].toString(),
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.add, color: Colors.white, size: 16),
+                          padding: EdgeInsets.zero,
+                          onPressed: () => controller.increment(index),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item["name"], style: const TextStyle(fontWeight: FontWeight.bold)),
-                Text(item["restaurant"], style: const TextStyle(color: Colors.grey, fontSize: 12)),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 16),
-                        const SizedBox(width: 4),
-                        Text(item["rating"].toString()),
-                      ],
-                    ),
-                    Icon(Icons.favorite_border, color: Colors.grey[400]),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.remove, color: Colors.white, size: 16),
-                        padding: EdgeInsets.zero,
-                        onPressed: () => decrement(index),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      item["count"].toString(),
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.add, color: Colors.white, size: 16),
-                        padding: EdgeInsets.zero,
-                        onPressed: () => increment(index),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
